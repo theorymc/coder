@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+    <body>
+        <div class="welcome">
+            Venture further into the dungeon...
+        </div>
+        <div class="coder">
+            <a href="#" class="test-fail">fail the test</a>
+            <a href="#" class="test-pass">pass the test</a>
+            <a href="#" class="test-key">add a key press</a>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.1.0.slim.min.js"></script>
+        <script>
+            var socket = new WebSocket("ws://127.0.0.1:8080/socket");
+
+            socket.addEventListener("open", function() {
+                // TODO
+            });
+
+            socket.addEventListener("message", function(e) {
+                if (e.data == "arena") {
+                    $welcome.hide();
+                    $coder.show();
+                }
+            });
+
+            socket.addEventListener("close", function() {
+                // TODO
+            });
+
+            var $body = $(document.body);
+
+            $body.on("click", ".test-fail", function() {
+                socket.send("fail");
+            });
+
+            $body.on("click", ".test-pass", function() {
+                socket.send("pass");
+            });
+
+            $body.on("click", ".test-key", function() {
+                socket.send("key");
+            });
+
+            var $welcome = $(".welcome");
+            $welcome.show();
+
+            var $coder = $(".coder");
+            $coder.hide();
+        </script>
+    </body>
+</html>
