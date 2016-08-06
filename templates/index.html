@@ -1,5 +1,14 @@
 <!doctype html>
 <html lang="en">
+    <head>
+        <style>
+            #editor {
+                width: 400px;
+                height: 300px;
+                position: relative;
+            }
+        </style>
+    </head>
     <body>
         <div class="welcome">
             Venture further into the dungeon...
@@ -7,25 +16,36 @@
         <div class="coder">
             <a href="#" class="test-fail">fail the test</a>
             <a href="#" class="test-pass">pass the test</a>
-            <a href="#" class="test-key">add a key press</a>
+            <div id="editor">// TODO</div>
         </div>
-        <script src="https://code.jquery.com/jquery-3.1.0.slim.min.js"></script>
+        <script src="/jquery.js"></script>
+        <script src="/ace/ace.js"></script>
         <script>
-            var socket = new WebSocket("ws://127.0.0.1:8080/socket");
+            var editor = ace.edit("editor");
+            editor.setTheme("ace/theme/tomorrow_night_eighties");
+            editor.getSession().setMode("ace/mode/javascript");
 
-            socket.addEventListener("open", function() {
-                // TODO
+            var textarea = editor.textInput.getElement();
+            var $textarea = $(textarea);
+
+            $textarea.on("keypress", function() {
+                socket.send("key");
             });
+
+            var socket = new WebSocket("ws://127.0.0.1:8080/socket");
 
             socket.addEventListener("message", function(e) {
                 if (e.data == "arena") {
                     $welcome.hide();
                     $coder.show();
                 }
-            });
 
-            socket.addEventListener("close", function() {
-                // TODO
+                if (e.data == "spawn") {
+                    $welcome.show();
+                    $coder.hide();
+
+                    editor.setValue("");
+                }
             });
 
             var $body = $(document.body);
@@ -38,15 +58,13 @@
                 socket.send("pass");
             });
 
-            $body.on("click", ".test-key", function() {
-                socket.send("key");
-            });
-
             var $welcome = $(".welcome");
             $welcome.show();
 
             var $coder = $(".coder");
             $coder.hide();
+
+            editor.setValue("");
         </script>
     </body>
 </html>

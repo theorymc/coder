@@ -10,21 +10,153 @@ use function Aerys\root;
 use function Aerys\router;
 use function Aerys\websocket;
 
+function get_blocks() {
+    return [
+        [922, 18, -1324],
+        [922, 18, -1325],
+        [922, 18, -1326],
+        [923, 18, -1322],
+        [923, 18, -1323],
+        [923, 18, -1324],
+        [923, 18, -1325],
+        [923, 18, -1326],
+        [923, 18, -1327],
+        [923, 18, -1328],
+        [926, 18, -1330],
+        [927, 18, -1330],
+        [928, 18, -1330],
+        [924, 18, -1329],
+        [925, 18, -1329],
+        [926, 18, -1329],
+        [927, 18, -1329],
+        [928, 18, -1329],
+        [929, 18, -1329],
+        [930, 18, -1329],
+        [932, 18, -1326],
+        [932, 18, -1325],
+        [932, 18, -1324],
+        [931, 18, -1328],
+        [931, 18, -1327],
+        [931, 18, -1326],
+        [931, 18, -1325],
+        [931, 18, -1324],
+        [931, 18, -1323],
+        [931, 18, -1322],
+        [928, 18, -1320],
+        [927, 18, -1320],
+        [926, 18, -1320],
+        [930, 18, -1321],
+        [929, 18, -1321],
+        [928, 18, -1321],
+        [927, 18, -1321],
+        [926, 18, -1321],
+        [925, 18, -1321],
+        [924, 18, -1321],
+        [924, 18, -1322],
+        [924, 18, -1323],
+        [924, 18, -1324],
+        [924, 18, -1325],
+        [924, 18, -1326],
+        [924, 18, -1327],
+        [924, 18, -1328],
+        [925, 18, -1322],
+        [925, 18, -1323],
+        [925, 18, -1324],
+        [925, 18, -1325],
+        [925, 18, -1326],
+        [925, 18, -1327],
+        [925, 18, -1328],
+        [926, 18, -1322],
+        [926, 18, -1323],
+        [926, 18, -1324],
+        [926, 18, -1325],
+        [926, 18, -1326],
+        [926, 18, -1327],
+        [926, 18, -1328],
+        [927, 18, -1322],
+        [927, 18, -1323],
+        [927, 18, -1324],
+        [927, 18, -1325],
+        [927, 18, -1326],
+        [927, 18, -1327],
+        [927, 18, -1328],
+        [928, 18, -1322],
+        [928, 18, -1323],
+        [928, 18, -1324],
+        [928, 18, -1325],
+        [928, 18, -1326],
+        [928, 18, -1327],
+        [928, 18, -1328],
+        [929, 18, -1322],
+        [929, 18, -1323],
+        [929, 18, -1324],
+        [929, 18, -1325],
+        [929, 18, -1326],
+        [929, 18, -1327],
+        [929, 18, -1328],
+        [930, 18, -1322],
+        [930, 18, -1323],
+        [930, 18, -1324],
+        [930, 18, -1325],
+        [930, 18, -1326],
+        [930, 18, -1327],
+        [930, 18, -1328],
+    ];
+}
+
+function remove_block() {
+    $builder = $GLOBALS["builder"];
+
+    if (count($GLOBALS["blocks"]) == 0) {
+        return;
+    }
+
+    $index = random_int(0, count($GLOBALS["blocks"]) - 1);
+    $block = array_slice($GLOBALS["blocks"], $index, 1);
+
+    $builder->exec(sprintf(
+        "setblock %s %s %s air",
+        $block[0][0], $block[0][1], $block[0][2]
+    ));
+}
+
+function regenerate($blush = "cobblestone") {
+    $builder = $GLOBALS["builder"];
+
+    $blocks = [
+        [922, 18, -1324, 922, 18, -1326],
+        [923, 18, -1322, 923, 18, -1328],
+        [926, 18, -1330, 928, 18, -1330],
+        [924, 18, -1329, 930, 18, -1329],
+        [932, 18, -1326, 932, 18, -1324],
+        [931, 18, -1328, 931, 18, -1322],
+        [928, 18, -1320, 926, 18, -1320],
+        [930, 18, -1321, 924, 18, -1321],
+        [924, 18, -1322, 930, 18, -1328],
+    ];
+
+    foreach ($blocks as $block) {
+        $builder->exec(sprintf(
+            "fill %s %s %s %s %s %s %s",
+            $block[0], $block[1], $block[2],
+            $block[3], $block[4], $block[5],
+            $blush
+        ));
+    }
+}
+
 const AERYS_OPTIONS = [
     "keepAliveTimeout" => 60,
 ];
 
-$builder = $GLOBALS["builder"] = new Client("127.0.0.1", 25575, "hello");
+$GLOBALS["builder"] = new Client("127.0.0.1", 25575, "hello");
 
 $wrapper = websocket(
-    $websocket = new class implements Aerys\Websocket
+    $GLOBALS["websocket"] = new class implements Aerys\Websocket
     {
-        public $endpoint;
-        public $clientId;
-
         public function onStart(Websocket\Endpoint $endpoint)
         {
-            $this->endpoint = $endpoint;
+            $GLOBALS["endpoint"] = $endpoint;
         }
 
         public function onHandshake(Request $request, Response $response)
@@ -32,32 +164,50 @@ $wrapper = websocket(
             // TODO
         }
 
-        public function onOpen(int $clientId, $handshakeData)
+        public function onOpen(int $client_id, $handshake_data)
         {
             // TODO
 
-            $this->clientId = $clientId;
+            $GLOBALS["client_id"] = $client_id;
         }
 
-        public function onData(int $clientId, Websocket\Message $message)
+        public function onData(int $client_id, Websocket\Message $message)
         {
+            $GLOBALS["client_id"] = $client_id;
+
             $builder = $GLOBALS["builder"];
             $command = yield $message;
 
             if ($command == "fail") {
+                $GLOBALS["seconds_left"] = $GLOBALS["seconds_default"];
+
+                $builder->exec('title @a title {"text": "Test failed!", "color": "red"}');
                 $builder->exec("summon Blaze 928 25 -1330");
             }
 
             if ($command == "pass") {
+                $builder->exec('title @a title {"text": "Test passed!", "color": "green"}');
                 $builder->exec("kill @e[type=Blaze]");
+
+                $GLOBALS["multiplier"]++;
+
+                Amp\once(function() use ($builder) {
+                    $builder->exec("tp @a 922 5 -1328");
+                }, 1000);
             }
 
             if ($command == "key") {
-                // TODO
+                $GLOBALS["keypress_count"]++;
+
+                if ($GLOBALS["keypress_count"] >= $GLOBALS["keypress_threshold"]) {
+                    remove_block();
+
+                    $GLOBALS["keypress_count"] = 0;
+                }
             }
         }
 
-        public function onClose(int $clientId, int $code, string $reason)
+        public function onClose(int $client_id, int $code, string $reason)
         {
             // TODO
         }
@@ -69,13 +219,74 @@ $wrapper = websocket(
     }
 );
 
-Amp\repeat(function() use ($builder, $websocket) {
+$GLOBALS["place"] = "spawn";
+
+$GLOBALS["multiplier"] = 1;
+
+$GLOBALS["seconds_left"] = 15;
+$GLOBALS["seconds_default"] = 35;
+$GLOBALS["seconds_handicap"] = 5;
+
+$GLOBALS["keypress_threshold"] = 5;
+$GLOBALS["keypress_count"] = 0;
+
+$GLOBALS["builder"]->exec("/title @a time 20 100 20");
+
+$GLOBALS["blocks"] = get_blocks();
+
+Amp\repeat(function() {
+    $builder = $GLOBALS["builder"];
+
+    if (isset($GLOBALS["endpoint"])) {
+        $endpoint = $GLOBALS["endpoint"];
+    }
+
+    if (empty($endpoint)) {
+        return;
+    }
+
+    if (isset($GLOBALS["client_id"])) {
+        $client_id = $GLOBALS["client_id"];
+    }
+
+    if (empty($client_id)) {
+        return;
+    }
+
     $result = $builder->exec("/testfor @a[x=929,y=4,z=-1319,r=3]");
 
     if (stristr($result, "Found")) {
         $builder->exec("/tp @a[x=929,y=4,z=-1319,r=3] 928 19 -1322");
 
-        $websocket->endpoint->send($websocket->clientId, "arena");
+        $endpoint->send($client_id, "arena");
+        $GLOBALS["place"] = "arena";
+    }
+
+    $result = $builder->exec("/testfor @a[x=922,y=4,z=-1328,r=3]");
+
+    if (stristr($result, "Found")) {
+        $builder->exec("/kill @e[type=Blaze]");
+
+        $GLOBALS["blocks"] = get_blocks();
+
+        $GLOBALS["seconds_left"] = $GLOBALS["seconds_default"] - ($GLOBALS["multiplier"] * $GLOBALS["seconds_handicap"]);
+
+        $endpoint->send($client_id, "spawn");
+        $GLOBALS["place"] = "spawn";
+
+        regenerate();
+    }
+
+    if ($GLOBALS["place"] == "arena") {
+        $GLOBALS["seconds_left"]--;
+
+        $builder->exec('title @a title {"text": ""}');
+        $builder->exec('title @a subtitle {"text": "' . $GLOBALS["seconds_left"] . ' seconds..."}');
+
+        if ($GLOBALS["seconds_left"] == 0) {
+            $builder->exec("summon Blaze 928 25 -1330");
+            $GLOBALS["seconds_left"] = $GLOBALS["seconds_default"] - ($GLOBALS["multiplier"] * $GLOBALS["seconds_handicap"]);
+        }
     }
 }, 1000);
 
