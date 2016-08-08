@@ -1,6 +1,8 @@
 var $died = $(".died");
 var $survived = $(".survived");
+var $intro = $(".intro");
 var $coder = $(".coder");
+var $buttons = $(".buttons");
 
 var intro;
 var example;
@@ -24,10 +26,13 @@ socket.addEventListener("message", function(e) {
         $died.addClass("hidden");
         $survived.addClass("hidden");
         $coder.removeClass("hidden");
+        $buttons.removeClass("hidden");
     }
 
     if (data.type == "spawn") {
+        $intro.addClass("hidden");
         $coder.addClass("hidden");
+        $buttons.addClass("hidden");
         editor.setValue("");
     }
 
@@ -38,20 +43,38 @@ socket.addEventListener("message", function(e) {
     if (data.type == "survived") {
         $survived.removeClass("hidden");
     }
+
+    if (data.type == "intro") {
+        $intro.text(data.text);
+        $intro.removeClass("hidden");
+    }
+
+    if (data.type == "example") {
+        example = data.text;
+        editor.setValue(data.text, 1);
+    }
+
+    if (data.type == "solution") {
+        solution = data.text;
+    }
 });
 
 var $body = $(document.body);
 
-$body.on("click", ".test-fail", function() {
-    socket.send("fail");
-});
-
-$body.on("click", ".test-pass", function() {
-    socket.send("pass");
+$body.on("click", ".reset", function() {
+    editor.setValue(example, 1);
 });
 
 $body.on("click", ".try", function() {
-    if (editor.getValue() === solution) {
+    var value;
+
+    try {
+        value = eval("(function(){ " + editor.getValue() +  " }())");
+    } catch (e) {
+        socket.send("fail");
+    }
+
+    if (solution === value) {
         socket.send("pass");
     } else {
         socket.send("fail");

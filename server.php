@@ -111,6 +111,18 @@ function get_blocks() {
     ];
 }
 
+$GLOBALS["challenges"] = [
+    [
+        "intro" => "The code does not execute properly. Try to figure out why.",
+        "example" => "function multiply(a, b){
+    a * b
+}
+
+return multiply(4, 6);",
+        "solution" => 24,
+    ]
+];
+
 function remove_block() {
     $builder = $GLOBALS["builder"];
 
@@ -279,6 +291,24 @@ Amp\repeat(function() {
             $builder->exec("/tp @a[x=929,y=4,z=-1319,r=3] 928 19 -1322");
 
             $GLOBALS["seconds_left"] = $GLOBALS["seconds_default"] - ($GLOBALS["multiplier"] * $GLOBALS["seconds_handicap"]);
+
+            $index = random_int(0, count($GLOBALS["challenges"]) - 1);
+            $challenge = $GLOBALS["challenges"][$index];
+
+            $endpoint->send($client_id, json_encode([
+                "type" => "intro",
+                "text" => $challenge["intro"],
+            ]));
+
+            $endpoint->send($client_id, json_encode([
+                "type" => "example",
+                "text" => $challenge["example"],
+            ]));
+
+            $endpoint->send($client_id, json_encode([
+                "type" => "solution",
+                "text" => $challenge["solution"],
+            ]));
 
             $endpoint->send($client_id, json_encode([
                 "type" => "arena",
