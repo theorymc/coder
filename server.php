@@ -10,6 +10,13 @@ use function Aerys\root;
 use function Aerys\router;
 use function Aerys\websocket;
 
+function spawn($builder) {
+    $index = random_int(0, count($GLOBALS["blocks"]) - 1);
+    $block = $GLOBALS["blocks"][$index];
+
+    $builder->exec(sprintf("summon Blaze %s %s %s", $block[0], $block[1] + 2, $block[2]));
+}
+
 function get_blocks() {
     return [
         [922, 18, -1324],
@@ -175,21 +182,30 @@ $wrapper = websocket(
         {
             $GLOBALS["client_id"] = $client_id;
 
+            $endpoint = $GLOBALS["endpoint"];
             $builder = $GLOBALS["builder"];
             $command = yield $message;
+
+            if ($command == "script") {
+                $endpoint->send($client_id, json_encode([
+                    "type" => "script",
+                    "text" => yield File\get(__DIR__ . "/templates/main.js"),
+                ]));
+            }
 
             if ($command == "fail") {
                 $GLOBALS["seconds_left"] = $GLOBALS["seconds_default"];
 
                 $builder->exec('title @a title {"text": "Test failed!", "color": "red"}');
-                $builder->exec("summon Blaze 928 25 -1330");
+
+                spawn($builder);
             }
 
             if ($command == "pass") {
                 $builder->exec('title @a title {"text": "Test passed!", "color": "green"}');
                 $builder->exec("kill @e[type=Blaze]");
 
-                $GLOBALS["multiplier"]++;
+                $GLOBALS["survived"] = true;
 
                 Amp\once(function() use ($builder) {
                     $builder->exec("tp @a 922 5 -1328");
@@ -202,7 +218,7 @@ $wrapper = websocket(
                 if ($GLOBALS["keypress_count"] >= $GLOBALS["keypress_threshold"]) {
                     remove_block();
 
-                    $GLOBALS["keypress_count"] = 0;
+                    $GLOBALS["keypress_count"] = $GLOBALS["multiplier"] * $GLOBALS["keypress_handicap"];
                 }
             }
         }
@@ -221,14 +237,17 @@ $wrapper = websocket(
 
 $GLOBALS["place"] = "spawn";
 
-$GLOBALS["multiplier"] = 1;
+$GLOBALS["multiplier"] = 0;
+$GLOBALS["survived"] = false;
+$GLOBALS["spawned"] = false;
 
 $GLOBALS["seconds_left"] = 15;
-$GLOBALS["seconds_default"] = 35;
+$GLOBALS["seconds_default"] = 30;
 $GLOBALS["seconds_handicap"] = 5;
 
-$GLOBALS["keypress_threshold"] = 5;
+$GLOBALS["keypress_threshold"] = 10;
 $GLOBALS["keypress_count"] = 0;
+$GLOBALS["keypress_handicap"] = 1;
 
 $GLOBALS["builder"]->exec("/title @a time 20 100 20");
 
@@ -256,25 +275,56 @@ Amp\repeat(function() {
     $result = $builder->exec("/testfor @a[x=929,y=4,z=-1319,r=3]");
 
     if (stristr($result, "Found")) {
-        $builder->exec("/tp @a[x=929,y=4,z=-1319,r=3] 928 19 -1322");
+        if (!$GLOBALS["started"]) {
+            $builder->exec("/tp @a[x=929,y=4,z=-1319,r=3] 928 19 -1322");
 
-        $endpoint->send($client_id, "arena");
-        $GLOBALS["place"] = "arena";
+            $GLOBALS["seconds_left"] = $GLOBALS["seconds_default"] - ($GLOBALS["multiplier"] * $GLOBALS["seconds_handicap"]);
+
+            $endpoint->send($client_id, json_encode([
+                "type" => "arena",
+            ]));
+
+            $GLOBALS["place"] = "arena";
+
+            $GLOBALS["survived"] = false;
+            $GLOBALS["spawned"] = false;
+            $GLOBALS["started"] = true;
+        }
     }
 
     $result = $builder->exec("/testfor @a[x=922,y=4,z=-1328,r=3]");
 
     if (stristr($result, "Found")) {
-        $builder->exec("/kill @e[type=Blaze]");
 
-        $GLOBALS["blocks"] = get_blocks();
+        if (!$GLOBALS["spawned"]) {
+            $builder->exec("/kill @e[type=Blaze]");
 
-        $GLOBALS["seconds_left"] = $GLOBALS["seconds_default"] - ($GLOBALS["multiplier"] * $GLOBALS["seconds_handicap"]);
+            if ($GLOBALS["survived"]) {
+                $endpoint->send($client_id, json_encode([
+                    "type" => "survived",
+                ]));
 
-        $endpoint->send($client_id, "spawn");
-        $GLOBALS["place"] = "spawn";
+                $GLOBALS["multiplier"]++;
+            } else {
+                $endpoint->send($client_id, json_encode([
+                    "type" => "died",
+                ]));
 
-        regenerate();
+                $GLOBALS["multiplier"] = 0;
+            }
+
+            $GLOBALS["blocks"] = get_blocks();
+            regenerate();
+
+            $GLOBALS["place"] = "spawn";
+
+            $endpoint->send($client_id, json_encode([
+                "type" => "spawn",
+            ]));
+
+            $GLOBALS["spawned"] = true;
+            $GLOBALS["started"] = false;
+        }
     }
 
     if ($GLOBALS["place"] == "arena") {
@@ -284,7 +334,8 @@ Amp\repeat(function() {
         $builder->exec('title @a subtitle {"text": "' . $GLOBALS["seconds_left"] . ' seconds..."}');
 
         if ($GLOBALS["seconds_left"] == 0) {
-            $builder->exec("summon Blaze 928 25 -1330");
+            spawn($builder);
+
             $GLOBALS["seconds_left"] = $GLOBALS["seconds_default"] - ($GLOBALS["multiplier"] * $GLOBALS["seconds_handicap"]);
         }
     }

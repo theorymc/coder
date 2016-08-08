@@ -1,70 +1,23 @@
 <!doctype html>
 <html lang="en">
     <head>
-        <style>
-            #editor {
-                width: 400px;
-                height: 300px;
-                position: relative;
-            }
-        </style>
+        <link rel="stylesheet" href="/main.css" />
     </head>
     <body>
-        <div class="welcome">
+        <div class="died">
             Venture further into the dungeon...
         </div>
-        <div class="coder">
+        <div class="survived hidden">
+            You live a little longer...
+        </div>
+        <div class="coder hidden">
             <a href="#" class="test-fail">fail the test</a>
             <a href="#" class="test-pass">pass the test</a>
+            <a href="#" class="test-try">try</a>
             <div id="editor">// TODO</div>
         </div>
         <script src="/jquery.js"></script>
         <script src="/ace/ace.js"></script>
-        <script>
-            var editor = ace.edit("editor");
-            editor.setTheme("ace/theme/tomorrow_night_eighties");
-            editor.getSession().setMode("ace/mode/javascript");
-
-            var textarea = editor.textInput.getElement();
-            var $textarea = $(textarea);
-
-            $textarea.on("keypress", function() {
-                socket.send("key");
-            });
-
-            var socket = new WebSocket("ws://127.0.0.1:8080/socket");
-
-            socket.addEventListener("message", function(e) {
-                if (e.data == "arena") {
-                    $welcome.hide();
-                    $coder.show();
-                }
-
-                if (e.data == "spawn") {
-                    $welcome.show();
-                    $coder.hide();
-
-                    editor.setValue("");
-                }
-            });
-
-            var $body = $(document.body);
-
-            $body.on("click", ".test-fail", function() {
-                socket.send("fail");
-            });
-
-            $body.on("click", ".test-pass", function() {
-                socket.send("pass");
-            });
-
-            var $welcome = $(".welcome");
-            $welcome.show();
-
-            var $coder = $(".coder");
-            $coder.hide();
-
-            editor.setValue("");
-        </script>
+        <script src="/loader.js"></script>
     </body>
 </html>
