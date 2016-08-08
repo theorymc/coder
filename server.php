@@ -120,6 +120,20 @@ $GLOBALS["challenges"] = [
 
 return multiply(4, 6);",
         "solution" => 24,
+    ],
+    [
+        "intro" => "Correct this code so that the greet function returns the expected value.",
+        "example" => "function Person(name){
+  this.name = name;
+}
+
+Person.prototype.greet = function(otherName){
+  return 'Hi ' + otherName + ', my name is ' + name;
+}
+
+var person = new Person('Chris');
+return person.greet('Vinh');",
+        "solution" => "Hi Vinh, my name is Chris",
     ]
 ];
 
