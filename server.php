@@ -112,22 +112,22 @@ function get_blocks() {
 }
 
 $GLOBALS["challenges"] = [
-//     [
-//         "intro" => "The code does not execute properly. Try to figure out why.",
-//         "example" => "function multiply(a, b){
-//     a * b
-// }",
-//         "inputs" => [[2, 3], [4, 5], [0, 3]],
-//         "outputs" => [6, 20, 0],
-//     ],
-//     [
-//         "intro" => "Each word will contain a number (e,g ['somew4here', 'ov2er', 'th1e', 'rai3nbow']). This number is the position the word should have in the result.",
-//         "example" => "function(words) {
-//
-// }",
-//         "inputs" => [[["somew4here", "ov2er", "th1e", "rai3nbow"]], [["on3e", "tw1o", "thr2ee"]]],
-//         "outputs" => [["th1e", "ov2er", "rai3nbow", "somew4here"], ["tw1o", "thr2ee", "on3e"]],
-//     ],
+    [
+        "intro" => "The code does not return the correct value. Try to figure out why.",
+        "example" => "function(a, b) {
+    a * b
+}",
+        "inputs" => [[2, 3], [4, 5], [0, 3]],
+        "outputs" => [6, 20, 0],
+    ],
+    [
+        "intro" => "Each word will contain a number (e.g ['somew4here', 'ov2er', 'th1e', 'rai3nbow']). This number is the position the word should have in the result.",
+        "example" => "function(words) {
+
+}",
+        "inputs" => [[["somew4here", "ov2er", "th1e", "rai3nbow"]], [["on3e", "tw1o", "thr2ee"]]],
+        "outputs" => [["th1e", "ov2er", "rai3nbow", "somew4here"], ["tw1o", "thr2ee", "on3e"]],
+    ],
     [
         "intro" => "Return the number of vowels in the given string.",
         "example" => "function(str) {
@@ -310,10 +310,11 @@ $GLOBALS["spawned"] = false;
 $GLOBALS["seconds_left"] = 15;
 $GLOBALS["seconds_default"] = 30;
 $GLOBALS["seconds_handicap"] = 5;
+$GLOBALS["seconds_min"] = 10;
 
-$GLOBALS["keypress_threshold"] = 10;
+$GLOBALS["keypress_threshold"] = 20;
 $GLOBALS["keypress_count"] = 0;
-$GLOBALS["keypress_handicap"] = 1;
+$GLOBALS["keypress_handicap"] = 2;
 
 $GLOBALS["builder"]->exec("/title @a time 20 100 20");
 
@@ -344,7 +345,7 @@ Amp\repeat(function() {
         if (!$GLOBALS["started"]) {
             $builder->exec("/tp @a[x=929,y=4,z=-1319,r=3] 928 19 -1322");
 
-            $GLOBALS["seconds_left"] = $GLOBALS["seconds_default"] - ($GLOBALS["multiplier"] * $GLOBALS["seconds_handicap"]);
+            $GLOBALS["seconds_left"] = max($GLOBALS["seconds_min"], $GLOBALS["seconds_default"] - ($GLOBALS["multiplier"] * $GLOBALS["seconds_handicap"]));
 
             $index = random_int(0, count($GLOBALS["challenges"]) - 1);
             $challenge = $GLOBALS["challenges"][$index];
@@ -425,7 +426,7 @@ Amp\repeat(function() {
         if ($GLOBALS["seconds_left"] == 0) {
             spawn($builder);
 
-            $GLOBALS["seconds_left"] = $GLOBALS["seconds_default"] - ($GLOBALS["multiplier"] * $GLOBALS["seconds_handicap"]);
+            $GLOBALS["seconds_left"] = max($GLOBALS["seconds_min"], $GLOBALS["seconds_default"] - ($GLOBALS["multiplier"] * $GLOBALS["seconds_handicap"]));
         }
     }
 }, 1000);
