@@ -111,72 +111,6 @@ function get_blocks() {
     ];
 }
 
-$GLOBALS["challenges"] = [
-    [
-        "intro" => "The code does not return the correct value. Try to figure out why.",
-        "example" => "function(a, b) {
-    a * b
-}",
-        "inputs" => [[2, 3], [4, 5], [0, 3]],
-        "outputs" => [6, 20, 0],
-    ],
-    [
-        "intro" => "Each word will contain a number (e.g ['somew4here', 'ov2er', 'th1e', 'rai3nbow']). This number is the position the word should have in the result.",
-        "example" => "function(words) {
-
-}",
-        "inputs" => [[["somew4here", "ov2er", "th1e", "rai3nbow"]], [["on3e", "tw1o", "thr2ee"]]],
-        "outputs" => [["th1e", "ov2er", "rai3nbow", "somew4here"], ["tw1o", "thr2ee", "on3e"]],
-    ],
-    [
-        "intro" => "Return the number of vowels in the given string.",
-        "example" => "function(str) {
-
-}",
-        "inputs" => [["ababababababa"], ["mississippi"]],
-        "outputs" => [7, 4],
-    ],
-//     [
-//         "intro" => "Implement a method that accepts 3 integer values a, b, c. The method should return true if a triangle can be built with the sides of given length and false in any other case.",
-//         "example" => "function isTriangle(a, b, c) {
-//    return false;
-// }
-//
-// return isTriangle(2, 8, 2);",
-        // "inputs" => [],
-        // "outputs" => [],
-//     ],
-//     [
-//         "intro" => "Your task is to write a function that takes a string and return a new string with all vowels removed.",
-//         "example" => "function disemvowel(str) {
-//   return str;
-// }
-//
-// return disemvowel('This website is for losers LOL!');",
-//         "solution" => "Ths wbst s fr lsrs LL!",
-//     ],
-//     [
-//         "intro" => "Create a function named divisors that takes an integer and returns an array with all of the integer's divisors (except for 1 and the number itself). ",
-//         "example" => "function divisors(integer) {
-//
-// };
-//
-// return divisors(12);",
-//         "inputs" => [],
-//         "outputs" => [],
-//     ],
-//     [
-//         "intro" => "Write a function to flatten the values of an arbitrarily-nested object to a simpel array.",
-//         "example" => "function nestedObjectToArray(list) {
-//
-// }
-//
-// return nestedObjectToArray({value: 1, next: {value: 'two', next: {value: 3, next: null}}});",
-//         "inputs" => [],
-//         "outputs" => [],
-//     ],
-];
-
 function remove_block() {
     $builder = $GLOBALS["builder"];
 
@@ -320,7 +254,19 @@ $GLOBALS["builder"]->exec("/title @a time 20 100 20");
 
 $GLOBALS["blocks"] = get_blocks();
 
+// Amp\repeat(function() {
+//     exec(sprintf("cd %s; git pull &", __DIR__));
+//
+//     $GLOBALS["challenges"] = json_decode(yield File\get(__DIR__ . "/questions.json"));
+//
+//     printf("%s question(s)\n", count($GLOBALS["challenges"]));
+// }, 10000);
+
+$GLOBALS["challenges"] = json_decode(file_get_contents(__DIR__ . "/questions.json"));
+
 Amp\repeat(function() {
+
+
     $builder = $GLOBALS["builder"];
 
     if (isset($GLOBALS["endpoint"])) {
@@ -352,22 +298,22 @@ Amp\repeat(function() {
 
             $endpoint->send($client_id, json_encode([
                 "type" => "intro",
-                "text" => $challenge["intro"],
+                "text" => $challenge->intro,
             ]));
 
             $endpoint->send($client_id, json_encode([
                 "type" => "example",
-                "text" => $challenge["example"],
+                "text" => $challenge->example,
             ]));
 
             $endpoint->send($client_id, json_encode([
                 "type" => "inputs",
-                "text" => $challenge["inputs"],
+                "text" => $challenge->inputs,
             ]));
 
             $endpoint->send($client_id, json_encode([
                 "type" => "outputs",
-                "text" => $challenge["outputs"],
+                "text" => $challenge->outputs,
             ]));
 
             $endpoint->send($client_id, json_encode([

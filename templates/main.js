@@ -85,9 +85,16 @@ $body.on("click", ".try", function() {
             socket.send("fail");
         }
 
-        if (JSON.stringify(outputs[i]) != JSON.stringify(result)) {
-            socket.send("fail");
-            return;
+        if( Object.prototype.toString.call( outputs[i] ) === '[object Array]' ) {
+            if (JSON.stringify(outputs[i].sort()) != JSON.stringify(result.sort())) {
+                socket.send("fail");
+                return;
+            }
+        } else {
+            if (JSON.stringify(outputs[i]) != JSON.stringify(result)) {
+                socket.send("fail");
+                return;
+            }
         }
     }
 

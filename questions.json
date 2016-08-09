@@ -1,0 +1,44 @@
+[
+    {
+        "intro": "The code does not return the correct value. Try to figure out why.",
+        "example": "function(a, b) {\na * b\n}",
+        "inputs": [[2, 3], [4, 5], [0, 3]],
+        "outputs": [6, 20, 0]
+    },
+    {
+        "intro": "Each word will contain a number (e.g ['somew4here', 'ov2er', 'th1e', 'rai3nbow']). This number is the position the word should have in the result.",
+        "example": "function(words) {\n\n}",
+        "inputs": [[["somew4here", "ov2er", "th1e", "rai3nbow"]], [["on3e", "tw1o", "thr2ee"]]],
+        "outputs": [["th1e", "ov2er", "rai3nbow", "somew4here"], ["tw1o", "thr2ee", "on3e"]]
+    },
+    {
+        "intro": "Return the number of vowels in the given string.",
+        "example": "function(val) {\n\n}",
+        "inputs": [["ababababababa"], ["mississippi"]],
+        "outputs": [7, 4]
+    },
+    {
+        "intro": "Make a function that accepts 3 integer values a, b, c. The function should return true if a triangle can be built with the sides of given length and false in any other case.",
+        "example": "function(a, b, c) {\n\n}",
+        "inputs": [[2, 3, 2], [3, 4, 5]],
+        "outputs": [false, true]
+    },
+    {
+        "intro": "Make a function that removes all vowels from a string.",
+        "example": "function(val) {\n\n}",
+        "inputs": [["This shouldn't have any vowels"], ["Neither should this..."]],
+        "outputs": ["Ths shldn't hv ny vwls", "Nthr shld ths..."]
+    },
+    {
+        "intro": "Make a function that returns all whole divisors of any number, except for 1 and the number.",
+        "example": "function(val) {\n\n}",
+        "inputs": [[12], [9], [2]],
+        "outputs": [[2, 3, 4, 6], [3], []]
+    },
+    {
+        "intro":  "Make a function to flatten the values of an nested object to a simple array.",
+        "example": "function(obj) {\n\n}",
+        "inputs": [{"value": 1, "next": {"value": "two", "next": {"value": 3, "next": null}}}, {"one": 1, "two": "two", "three": 4}],
+        "outputs": [[1, "two", 3], [1, "two", 4]]
+    }
+]
