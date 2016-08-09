@@ -112,38 +112,22 @@ function get_blocks() {
 }
 
 $GLOBALS["challenges"] = [
+//     [
+//         "intro" => "The code does not execute properly. Try to figure out why.",
+//         "example" => "function multiply(a, b){
+//     a * b
+// }",
+//         "inputs" => [[2, 3], [4, 5], [0, 3]],
+//         "outputs" => [6, 20, 0],
+//     ],
     [
-        "intro" => "The code does not execute properly. Try to figure out why.",
-        "example" => "function multiply(a, b){
-    a * b
+        "intro" => "Each word will contain a number (e,g ['somew4here', 'ov2er', 'th1e', 'rai3nbow']). This number is the position the word should have in the result.",
+        "example" => "function(words) {
+
 }",
-        "inputs" => [[2, 3], [4, 5], [0, 3]],
-        "outputs" => [6, 20, 0],
+        "inputs" => [[["somew4here", "ov2er", "th1e", "rai3nbow"]], [["on3e", "tw1o", "thr2ee"]]],
+        "outputs" => [["th1e", "ov2er", "rai3nbow", "somew4here"], ["tw1o", "thr2ee", "on3e"]],
     ],
-//     [
-//         "intro" => "Correct this code so that the greet function returns the expected value.",
-//         "example" => "function Person(name){
-//     this.name = name;
-// }
-//
-// Person.prototype.greet = function(otherName) {
-//     return 'Hi ' + otherName + ', my name is ' + name;
-// }
-//
-// var person = new Person('Chris');
-// return person.greet('Vinh');",
-//         "solution" => "Hi Vinh, my name is Chris",
-//     ],
-//     [
-//         "intro" => "Each word in the String will contain a single number. This number is the position the word should have in the result.",
-//         "example" => "function order(words) {
-//     return words;
-// }
-//
-// return 'is2 Thi1s T4est 3a';",
-//         "inputs" => [],
-//         "outputs" => [],
-//     ],
 //     [
 //         "intro" => "Return the number (count) of vowels in the given string.",
 //         "example" => "function getCount(str) {

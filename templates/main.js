@@ -80,7 +80,7 @@ $body.on("click", ".try", function() {
 
             result = eval(command);
 
-            console.log(command, inputs[i], outputs[i], result);
+            // console.log(command, inputs[i], outputs[i], result);
         } catch (e) {
             socket.send("fail");
         }
