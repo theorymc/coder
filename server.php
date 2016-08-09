@@ -120,23 +120,22 @@ $GLOBALS["challenges"] = [
 //         "inputs" => [[2, 3], [4, 5], [0, 3]],
 //         "outputs" => [6, 20, 0],
 //     ],
+//     [
+//         "intro" => "Each word will contain a number (e,g ['somew4here', 'ov2er', 'th1e', 'rai3nbow']). This number is the position the word should have in the result.",
+//         "example" => "function(words) {
+//
+// }",
+//         "inputs" => [[["somew4here", "ov2er", "th1e", "rai3nbow"]], [["on3e", "tw1o", "thr2ee"]]],
+//         "outputs" => [["th1e", "ov2er", "rai3nbow", "somew4here"], ["tw1o", "thr2ee", "on3e"]],
+//     ],
     [
-        "intro" => "Each word will contain a number (e,g ['somew4here', 'ov2er', 'th1e', 'rai3nbow']). This number is the position the word should have in the result.",
-        "example" => "function(words) {
+        "intro" => "Return the number of vowels in the given string.",
+        "example" => "function getCount(str) {
 
 }",
-        "inputs" => [[["somew4here", "ov2er", "th1e", "rai3nbow"]], [["on3e", "tw1o", "thr2ee"]]],
-        "outputs" => [["th1e", "ov2er", "rai3nbow", "somew4here"], ["tw1o", "thr2ee", "on3e"]],
+        "inputs" => [["ababababababa"], ["mississippi"]],
+        "outputs" => [7, 4],
     ],
-//     [
-//         "intro" => "Return the number (count) of vowels in the given string.",
-//         "example" => "function getCount(str) {
-//
-// }
-//
-// return getCount('abracadabra');",
-//         "solution" => 5,
-//     ],
 //     [
 //         "intro" => "Implement a method that accepts 3 integer values a, b, c. The method should return true if a triangle can be built with the sides of given length and false in any other case.",
 //         "example" => "function isTriangle(a, b, c) {
@@ -144,8 +143,8 @@ $GLOBALS["challenges"] = [
 // }
 //
 // return isTriangle(2, 8, 2);",
-//         "inputs" => [],
-//         "outputs" => [],
+        // "inputs" => [],
+        // "outputs" => [],
 //     ],
 //     [
 //         "intro" => "Your task is to write a function that takes a string and return a new string with all vowels removed.",
