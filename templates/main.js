@@ -75,7 +75,9 @@ $body.on("click", ".try", function() {
 
     for (var i = 0; i < inputs.length; i++) {
         try {
-            result = eval("fn = " + editor.getValue() + "; fn(..." + JSON.stringify(inputs[i]) + ")");
+            console.log("window.fn = " + editor.getValue() + "; fn(..." + JSON.stringify(inputs[i]) + ")", inputs[i], outputs[i]);
+
+            result = eval("window.fn = " + editor.getValue() + "; fn(..." + JSON.stringify(inputs[i]) + ")");
         } catch (e) {
             socket.send("fail");
         }
