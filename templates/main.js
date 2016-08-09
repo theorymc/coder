@@ -72,12 +72,14 @@ $body.on("click", ".reset", function() {
 
 $body.on("click", ".try", function() {
     var value;
+    var command;
 
     for (var i = 0; i < inputs.length; i++) {
         try {
-            console.log("window.fn = " + editor.getValue() + "; fn(..." + JSON.stringify(inputs[i]) + ")", inputs[i], outputs[i]);
+            command = "window.fn = " + editor.getValue() + "; return window.fn(..." + JSON.stringify(inputs[i]) + ")", inputs[i], outputs[i];
 
-            result = eval("window.fn = " + editor.getValue() + "; fn(..." + JSON.stringify(inputs[i]) + ")");
+            console.log(command);
+            result = eval(command);
         } catch (e) {
             socket.send("fail");
         }
