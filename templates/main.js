@@ -85,7 +85,7 @@ $body.on("click", ".try", function() {
             socket.send("fail");
         }
 
-        if (outputs[i] !== result) {
+        if (JSON.stringify(outputs[i]) != JSON.stringify(result)) {
             socket.send("fail");
             return;
         }
