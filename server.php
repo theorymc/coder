@@ -130,7 +130,7 @@ $GLOBALS["challenges"] = [
 //     ],
     [
         "intro" => "Return the number of vowels in the given string.",
-        "example" => "function getCount(str) {
+        "example" => "function(str) {
 
 }",
         "inputs" => [["ababababababa"], ["mississippi"]],
