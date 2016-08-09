@@ -6,7 +6,8 @@ var $buttons = $(".buttons");
 
 var intro;
 var example;
-var solution;
+var inputs;
+var outputs;
 
 var editor = ace.edit("editor");
 editor.setTheme("ace/theme/tomorrow_night_eighties");
@@ -54,8 +55,12 @@ socket.addEventListener("message", function(e) {
         editor.setValue(data.text, 1);
     }
 
-    if (data.type == "solution") {
-        solution = data.text;
+    if (data.type == "inputs") {
+        inputs = data.text;
+    }
+
+    if (data.type == "outputs") {
+        outputs = data.text;
     }
 });
 
@@ -68,15 +73,18 @@ $body.on("click", ".reset", function() {
 $body.on("click", ".try", function() {
     var value;
 
-    try {
-        value = eval("(function(){ " + editor.getValue() +  " }())");
-    } catch (e) {
-        socket.send("fail");
+    for (var i = 0; i < inputs.length; i++) {
+        try {
+            result = eval("fn = " . editor.getValue() . "; fn(..." + JSON.stringify(inputs[i]) + ")");
+        } catch (e) {
+            socket.send("fail");
+        }
+
+        if (outputs[i] !== value) {
+            socket.send("fail");
+            return;
+        }
     }
 
-    if (solution === value) {
-        socket.send("pass");
-    } else {
-        socket.send("fail");
-    }
+    socket.send("pass");
 });
