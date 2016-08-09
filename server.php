@@ -124,17 +124,71 @@ return multiply(4, 6);",
     [
         "intro" => "Correct this code so that the greet function returns the expected value.",
         "example" => "function Person(name){
-  this.name = name;
+    this.name = name;
 }
 
-Person.prototype.greet = function(otherName){
-  return 'Hi ' + otherName + ', my name is ' + name;
+Person.prototype.greet = function(otherName) {
+    return 'Hi ' + otherName + ', my name is ' + name;
 }
 
 var person = new Person('Chris');
 return person.greet('Vinh');",
         "solution" => "Hi Vinh, my name is Chris",
-    ]
+    ],
+    [
+        "intro" => "Each word in the String will contain a single number. This number is the position the word should have in the result.",
+        "example" => "function order(words) {
+    return words;
+}
+
+return 'is2 Thi1s T4est 3a';",
+        "solution" => "Thi1s is2 3a T4est",
+    ],
+    [
+        "intro" => "Return the number (count) of vowels in the given string.",
+        "example" => "function getCount(str) {
+
+}
+
+return getCount('abracadabra');",
+        "solution" => 5,
+    ],
+    [
+        "intro" => "Implement a method that accepts 3 integer values a, b, c. The method should return true if a triangle can be built with the sides of given length and false in any other case.",
+        "example" => "function isTriangle(a, b, c) {
+   return false;
+}
+
+return isTriangle(2, 8, 2);",
+        "solution" => true,
+    ],
+    [
+        "intro" => "Your task is to write a function that takes a string and return a new string with all vowels removed.",
+        "example" => "function disemvowel(str) {
+  return str;
+}
+
+return disemvowel('This website is for losers LOL!');",
+        "solution" => "Ths wbst s fr lsrs LL!",
+    ],
+    [
+        "intro" => "Create a function named divisors that takes an integer and returns an array with all of the integer's divisors (except for 1 and the number itself). ",
+        "example" => "function divisors(integer) {
+
+};
+
+return divisors(12);",
+        "solution" => [2, 3, 4, 6],
+    ],
+    [
+        "intro" => "Write a function to flatten the values of an arbitrarily-nested object to a simpel array.",
+        "example" => "function nestedObjectToArray(list) {
+
+}
+
+return nestedObjectToArray({value: 1, next: {value: 'two', next: {value: 3, next: null}}});",
+        "solution" => [1, 'two', 3],
+    ],
 ];
 
 function remove_block() {
